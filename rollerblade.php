@@ -3,7 +3,7 @@
 * Plugin Name: Rollerblade
 * Plugin URI: http://webatix.com/supporturl
 * Description: Feedback tool
-* Version: 0.0.1
+* Version: 0.0.2
 * Author: Webatix
 * Author URI: http://webatix.com
 * Text Domain: rollerblade
@@ -97,9 +97,9 @@ class Rollerblade {
 		$company_name = get_option( '_rb_company_name' );
 		
 		//TODO: don't forget to change the target URL
-		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.rollerblade.dev/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
-		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.dev.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
-		echo '<div id="rollerblade-button><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.playground.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="https://' . $company_name . '.rollerblade.dev/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="https://' . $company_name . '.dev.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="https://' . $company_name . '.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
 		
 		//mouse tip
 		echo '<div id="mouse-tip">' . __( 'Click and drag to highlight the area', 'rollerblade' ) . '</div><div id="feedback-highlighter-next-clone"></div>';
@@ -173,7 +173,7 @@ class Rollerblade {
 		//TODO: change URL to the right one!
 		//$remote_url = 'http://rollerblade.dev/api/' . $company_name . '/ticket/add';
 		//$remote_url = 'https://dev.rollerbladeapp.com/api/' . $company_name . '/ticket/add';
-		$remote_url = 'https://playground.rollerbladeapp.com/api/' . $company_name . '/ticket/add';
+		$remote_url = 'https://rollerbladeapp.com/api/' . $company_name . '/ticket/add';
 		
 		$res = wp_remote_post( 
 				$remote_url,
@@ -273,7 +273,7 @@ class Rollerblade {
 					
 					<p id="rb-options-header-links">
 					
-						<a href="#" target="_blank"><?php _e( 'Your Account', 'rollerblade' ); ?></a> <span id="after-first-item">&nbsp; &#x7c; &nbsp;</span><a href="#" target="_blank"><?php _e( 'Your Project Tickets', 'rollerblade' ); ?></a> <span id="after-second-item">&nbsp; &#x7c; &nbsp;</span><a href="#" target="_blank"><?php _e( 'Support and Docs', 'rollerblade' ); ?></a> <span id="after-third-item">&nbsp; &#x7c; &nbsp;</span><a href="#" target="_blank"><?php _e( 'Different Ways to Use Rollerblade', 'rollerblade' ); ?></a>
+						<a href="https://rollerbladeapp.com/my-account/" target="_blank"><?php _e( 'Your Account', 'rollerblade' ); ?></a> <span id="after-first-item">&nbsp; &#x7c; &nbsp;</span><a href="<?php if ( ! empty( $company_name ) ) { echo 'https://' . $company_name . '/rollerbladeapp.com/'; } else { echo '#'; } ?>" target="_blank"><?php _e( 'Your Project Tickets', 'rollerblade' ); ?></a> <span id="after-second-item">&nbsp; &#x7c; &nbsp;</span><a href="https://rollerbladeapp.com/support/" target="_blank"><?php _e( 'Support and Docs', 'rollerblade' ); ?></a>
 						
 					</p>
 					

@@ -461,7 +461,9 @@
 					redraw(ctx);
 				});
 
-				$('#feedback-module').on('click', '.feedback-wizard-close,.feedback-close-btn', function() {
+				$('#feedback-module').on('click', '.feedback-wizard-close,.feedback-close-btn', function(event) {
+					event.preventDefault();
+					event.stopPropagation();
 					close();
 				});
 				
@@ -505,6 +507,9 @@
 						redraw(ctx, false);
 					}
 					html2canvas($('body'), {
+						onpreloaded: function() {
+							$('#feedback-overview').css({ display: 'none' });
+						},
 						onrendered: function(canvas) {
 							if (!settings.screenshotStroke) {
 								redraw(ctx);
@@ -517,12 +522,13 @@
 							post.img = img;
 							settings.onScreenshotTaken(post.img);
 							if(settings.showDescriptionModal) {
+								canDraw = false;
 								$('#feedback-canvas-tmp').remove();
-								$('#feedback-overview').show();
+								$('#feedback-overview').css({ display: 'block' });
 								$('#feedback-overview-description-text>textarea').remove();
-								$('#feedback-overview-screenshot>img').remove();
+								//$('#feedback-overview-screenshot>img').remove();
 								$('<textarea id="feedback-overview-note">' + $('#feedback-note').val() + '</textarea>').insertAfter('#feedback-overview-description-text h3:eq(0)');
-								$('#feedback-overview-screenshot').append('<img class="feedback-screenshot" src="' + img + '" />');							
+								//$('#feedback-overview-screenshot').append('<img class="feedback-screenshot" src="' + img + '" />');							
 							}
 							else {
 								$('#feedback-module').remove();
@@ -537,11 +543,6 @@
 				
 				$(document).on('click', '#feedback-overview-back', function(e) {
 					canDraw = true;
-					/*$('#feedback-canvas').css('cursor', 'crosshair');
-					$('#feedback-overview').hide();
-					$('#feedback-helpers').show();
-					$('#feedback-highlighter').show();
-					$('#feedback-overview-error').hide();*/
 					$(this).parent().parent().children('.feedback-wizard-close').click();
 				});
 				
@@ -563,7 +564,7 @@
 
 					if ($('#feedback-note').val().length > 0) {
 						$('#feedback-submit-success,#feedback-submit-error').remove();
-						$('#feedback-overview').hide();
+						$('#feedback-overview').css({ display: 'none' });
 						
 						post.img = img;
 						post.note = $('#feedback-note').val();
@@ -596,7 +597,7 @@
 									});
 									
 									//close it automatically, after 3 seconds
-									setTimeout( function() { jQuery( '#rollerblade-button' ).click(); }, 3000 );
+									setTimeout( function() { jQuery( '#success-rb-close-icon' ).click(); }, 3000 );
 									
 								} else {
 									
@@ -647,7 +648,7 @@
 			}
 			$('[data-highlighted="true"]').removeAttr('data-highlight-id').removeAttr('data-highlighted');
 			$('#feedback-module').remove();
-			$('.feedback-btn').show();
+			//$('.feedback-btn').show();
 			
 			settings.onClose.call(this);
 		}
