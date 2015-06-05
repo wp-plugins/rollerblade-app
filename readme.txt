@@ -1,5 +1,5 @@
 === Rollerblade ===
-Contributors: achilles_sm, larrykokoszka
+Contributors: Achilles_sm, larrykokoszka
 Tags: project management, annotations, ticket system, support system, client manager, client feedback, feedback tool
 Requires at least: 4.2
 Tested up to: 4.4
@@ -36,5 +36,5 @@ Because it's going to save you tons of time over the traditional QA and web site
 We are in beta right now. It's free!
 
 == Changelog ==
-v. 0.1
+v. 0.0.1
 -Initial Beta Release

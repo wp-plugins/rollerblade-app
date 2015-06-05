@@ -3,7 +3,7 @@
 * Plugin Name: Rollerblade
 * Plugin URI: http://webatix.com/supporturl
 * Description: Feedback tool
-* Version: 0.0.2
+* Version: 0.0.3
 * Author: Webatix
 * Author URI: http://webatix.com
 * Text Domain: rollerblade
@@ -97,9 +97,9 @@ class Rollerblade {
 		$company_name = get_option( '_rb_company_name' );
 		
 		//TODO: don't forget to change the target URL
-		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="https://' . $company_name . '.rollerblade.dev/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
-		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="https://' . $company_name . '.dev.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
-		echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="https://' . $company_name . '.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.rollerblade.dev/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.dev.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
 		
 		//mouse tip
 		echo '<div id="mouse-tip">' . __( 'Click and drag to highlight the area', 'rollerblade' ) . '</div><div id="feedback-highlighter-next-clone"></div>';
