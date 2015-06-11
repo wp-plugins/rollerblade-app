@@ -1,9 +1,9 @@
 <?php
 /**
 * Plugin Name: Rollerblade
-* Plugin URI: http://webatix.com/supporturl
+* Plugin URI: https://rollerbladeapp.com/support/
 * Description: Feedback tool
-* Version: 0.0.3
+* Version: 0.0.4
 * Author: Webatix
 * Author URI: http://webatix.com
 * Text Domain: rollerblade
@@ -20,11 +20,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Rollerblade {
 	
 	/**
+	 * Triggered on plugin activation
+	 * 
+	 * @return void
+	 */
+	public function activate() {
+		
+		add_option( 'rb_plugin_activated', true );
+		
+	}
+	
+	
+	/**
 	 * Initializes the plugin
 	 * 
 	 * @return void
 	 */
 	public static function initialize_plugin() {
+		
+		//display user instructions only on plugin activation
+		if ( true == get_option( 'rb_plugin_activated', false ) ) {
+				
+			delete_option( 'rb_plugin_activated' );
+				
+			add_action( 'admin_footer', array( 'Rollerblade', 'rb_display_user_instructions' ) );
+				
+		}
+		
+		//add 
+		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( 'Rollerblade', 'action_links' ) );
 		
 		add_action( 'wp_enqueue_scripts', array( 'Rollerblade', 'enqueue_scripts_and_styles' ) );
 		
@@ -40,13 +64,62 @@ class Rollerblade {
 	
 	
 	/**
+	 * Displays user instructions on plugin activation
+	 *
+	 * @return void
+	 */
+	public function rb_display_user_instructions() {
+	
+		wp_enqueue_script( 'jquery-ui-dialog' );
+	
+		wp_enqueue_style( 'jqueryui', plugins_url( 'css/smoothness-jquery-ui.css', __FILE__ ) );
+	
+		?><div id="rb-user-instructions" style="display: none"><?php
+			
+				$subdomain = get_option( '_rb_subdomain' );
+			
+				if ( empty( $subdomain ) ) {
+			
+					_e( 'Thank you for installing Rollerblade! Please set up a free account on <a href="http://rollerbladeapp.com/signup/" target="_blank">Rollerbladeapp.com</a> so we have a place to store your screenshots and comments. If you\'ve already created an account, enter your account sub-domain in the <a href="' . admin_url( 'options-general.php?page=rollerblade' ) . '">settings</a> to link it to your account.', 'rollerblade' );
+					
+				} else {
+	
+					_e( 'Please login to <a href="http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options" target="_blank">http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options</a> and add ' . get_bloginfo( 'url' ) . ' to your settings so we can store your tickets. Once you\'ve done this, just go to the front end and click the Rollerblade button to use the tool!', 'rollerblade' );
+	
+				}
+				
+		?></div><script type="text/javascript">jQuery( function($) { $( '#rb-user-instructions' ).dialog( { title: '<?php _e( 'Plugin activated!', 'rollerblade' ); ?>', width: 830 } ); } );</script><?php
+			
+	}
+	
+	
+	/**
+	 * Adds "Settings" link to plugin row on plugins page
+	 *
+	 * @param array $links
+	 *
+	 * @return array $links
+	 */
+	public static function action_links( $links ) {
+	
+		$plugin_links = array(
+				'<a href="' .admin_url( 'options-general.php?page=rollerblade' ) . '">' . __( 'Settings', 'rollerblade' ) . '</a>',
+				'<a href="http://rollerbladeapp.com/support">' . __( 'Support', 'rollerblade' ) . '</a>',
+		);
+	
+		return array_merge( $plugin_links, $links );
+	
+	}
+	
+	
+	/**
 	 * Enqueues scripts and styles
 	 * 
 	 * @return void
 	 */
 	public static function enqueue_scripts_and_styles() {
 		
-		//make sure that company name is set and current user is allowed to use Rollerblade
+		//make sure that subdomain is set and current user is allowed to use Rollerblade
 		$usage_allowed = self::is_rb_usage_allowed();
 		
 		if ( ! $usage_allowed ) {
@@ -87,19 +160,19 @@ class Rollerblade {
 	 */
 	public static function print_the_rollerblade_button() {
 		
-		//make sure that company name is set and current user is allowed to use Rollerblade
+		//make sure that subdomain is set and current user is allowed to use Rollerblade
 		if ( ! self::is_rb_usage_allowed() ) {
 
 			return;
 			
 		}
 
-		$company_name = get_option( '_rb_company_name' );
+		$subdomain = get_option( '_rb_subdomain' );
 		
 		//TODO: don't forget to change the target URL
-		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.rollerblade.dev/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
-		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.dev.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
-		echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $company_name . '.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $subdomain . '.rollerblade.dev/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		//echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $subdomain . '.dev.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
+		echo '<div id="rollerblade-button"><div id="rb-button-drag-area"></div><a href="http://' . $subdomain . '.rollerbladeapp.com/tickets/" id="rb-tickets-link" target="_blank"></a></div>';
 		
 		//mouse tip
 		echo '<div id="mouse-tip">' . __( 'Click and drag to highlight the area', 'rollerblade' ) . '</div><div id="feedback-highlighter-next-clone"></div>';
@@ -112,16 +185,16 @@ class Rollerblade {
 	
 	
 	/**
-	 * Returns true if company name is set and current user is allowed to use Rollerblade. Otherwise false.
+	 * Returns true if subdomain is set and current user is allowed to use Rollerblade. Otherwise false.
 	 *  
 	 * @return boolean $is_allowed
 	 */
 	public static function is_rb_usage_allowed() {
 		
-		//make sure company name is set
-		$company_name = get_option( '_rb_company_name' );
+		//make sure subdomain is set
+		$subdomain = get_option( '_rb_subdomain' );
 		
-		if ( empty( $company_name ) ) {
+		if ( empty( $subdomain ) ) {
 				
 			return false;
 				
@@ -162,18 +235,18 @@ class Rollerblade {
 		
 		check_ajax_referer( 'rb-request-nonce', 'security' );
 		
-		$company_name = get_option( '_rb_company_name' );
-		
 		if ( ! self::is_rb_usage_allowed() ) {
 			
 			die();		//this call was not from our tool, die silently
 			
 		}
 		
+		$subdomain = get_option( '_rb_subdomain' );
+		
 		//TODO: change URL to the right one!
-		//$remote_url = 'http://rollerblade.dev/api/' . $company_name . '/ticket/add';
-		//$remote_url = 'https://dev.rollerbladeapp.com/api/' . $company_name . '/ticket/add';
-		$remote_url = 'https://rollerbladeapp.com/api/' . $company_name . '/ticket/add';
+		//$remote_url = 'http://rollerblade.dev/api/' . $subdomain . '/ticket/add';
+		//$remote_url = 'https://dev.rollerbladeapp.com/api/' . $subdomain . '/ticket/add';
+		$remote_url = 'https://rollerbladeapp.com/api/' . $subdomain . '/ticket/add';
 		
 		$res = wp_remote_post( 
 				$remote_url,
@@ -223,15 +296,15 @@ class Rollerblade {
 		wp_enqueue_style( 'rollerblade', plugins_url( 'css/rollerblade.css' , __FILE__ ) );
 		
 		//process data if it was submitted
-		if ( isset( $_POST['rb-company-name'] ) ) {
+		if ( isset( $_POST['rb-subdomain'] ) ) {
 				
-			$company_name = trim( $_POST['rb-company-name'] );
+			$subdomain = trim( $_POST['rb-subdomain'] );
 			
-			update_option( '_rb_company_name', $company_name );
+			update_option( '_rb_subdomain', $subdomain );
 				
 		} else {
 			
-			$company_name = get_option( '_rb_company_name', '' );
+			$subdomain = get_option( '_rb_subdomain', '' );
 			
 		}
 		
@@ -273,7 +346,7 @@ class Rollerblade {
 					
 					<p id="rb-options-header-links">
 					
-						<a href="https://rollerbladeapp.com/my-account/" target="_blank"><?php _e( 'Your Account', 'rollerblade' ); ?></a> <span id="after-first-item">&nbsp; &#x7c; &nbsp;</span><a href="<?php if ( ! empty( $company_name ) ) { echo 'https://' . $company_name . '/rollerbladeapp.com/'; } else { echo '#'; } ?>" target="_blank"><?php _e( 'Your Project Tickets', 'rollerblade' ); ?></a> <span id="after-second-item">&nbsp; &#x7c; &nbsp;</span><a href="https://rollerbladeapp.com/support/" target="_blank"><?php _e( 'Support and Docs', 'rollerblade' ); ?></a>
+						<a href="<?php if ( ! empty( $subdomain ) ) { echo 'http://' . $subdomain . '.rollerbladeapp.com/wp-admin/admin.php?page=rollerblade-options'; } else { echo '#'; } ?>" target="_blank"><?php _e( 'Your Account', 'rollerblade' ); ?></a> <span id="after-first-item">&nbsp; &#x7c; &nbsp;</span><a href="<?php if ( ! empty( $subdomain ) ) { echo 'http://' . $subdomain . '.rollerbladeapp.com/'; } else { echo '#'; } ?>" target="_blank"><?php _e( 'Your Project Tickets', 'rollerblade' ); ?></a> <span id="after-second-item">&nbsp; &#x7c; &nbsp;</span><a href="http://rollerbladeapp.com/support/" target="_blank"><?php _e( 'Support and Docs', 'rollerblade' ); ?></a>
 						
 					</p>
 					
@@ -293,13 +366,13 @@ class Rollerblade {
 						
 							<th scope="row">
 							
-								<label for="rb-company-name"><?php _e( 'Company Name', 'rollerblade' ); ?></label>
+								<label for="rb-subdomain"><?php _e( 'Rollerblade Subdomain', 'rollerblade' ); ?></label>
 							
 							</th>
 							
 							<td>
 							
-								<input type="text" id="rb-company-name" name="rb-company-name" value="<?php echo esc_attr( $company_name ); ?>" />
+								<input type="text" id="rb-subdomain" name="rb-subdomain" value="<?php echo esc_attr( $subdomain ); ?>" />
 							
 							</td>
 						
@@ -413,4 +486,6 @@ class Rollerblade {
 
 //initialize plugin
 add_action( 'init', array( 'Rollerblade', 'initialize_plugin' ) );
+
+register_activation_hook( __FILE__, array( 'Rollerblade', 'activate' ) );
 
