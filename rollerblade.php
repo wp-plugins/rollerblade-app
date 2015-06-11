@@ -3,7 +3,7 @@
 * Plugin Name: Rollerblade
 * Plugin URI: https://rollerbladeapp.com/support/
 * Description: Feedback tool
-* Version: 0.0.5
+* Version: 0.0.6
 * Author: Webatix
 * Author URI: http://webatix.com
 * Text Domain: rollerblade

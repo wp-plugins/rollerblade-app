@@ -45,14 +45,20 @@ We are in beta right now. It's free!
 
 == Changelog ==
 
-v. 0.4
+v. 0.0.6
+- Asjusted RB Signup Wizard styles.
+
+v. 0.0.5
+- Sign up process optimization.
+
+v. 0.0.4
 - Fix for connecting sites that were getting ip address mismatches.
 
-v. 0.2 and 0.3
+v. 0.0.2 and 0.0.3
 - Fix bug with screenshots
 - Settings interface improvements
 
-v. 0.1
+v. 0.0.1
 -Initial Beta Release
 
 == Support ==
