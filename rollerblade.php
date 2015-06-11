@@ -88,10 +88,7 @@ class Rollerblade {
 	
 		?><div id="rb-user-instructions" style="display: none"><?php
 			
-				//_e( 'Thank you for installing Rollerblade! Please set up a free account on <a href="http://rollerbladeapp.com/signup/" target="_blank">Rollerbladeapp.com</a> so we have a place to store your screenshots and comments. If you\'ve already created an account, enter your account sub-domain in the <a href="' . admin_url( 'options-general.php?page=rollerblade' ) . '">settings</a> to link it to your account.', 'rollerblade' );
 				_e( 'Setup is easiest if you do it now using our set up wizard. First step is to create an account on Rollerbladeapp.com<br /><a href="#" id="rb-already-have-acc">I already have an account</a><br /><a href="#" id="rb-dont-have-acc">I don’t have an account or am not sure</a>', 'rollerblade' );
-	
-				//_e( 'Please login to <a href="http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options" target="_blank">http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options</a> and add ' . get_bloginfo( 'url' ) . ' to your settings so we can store your tickets. Once you\'ve done this, just go to the front end and click the Rollerblade button to use the tool!', 'rollerblade' );
 				
 		?></div>
 		
