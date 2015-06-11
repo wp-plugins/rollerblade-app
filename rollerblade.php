@@ -3,7 +3,7 @@
 * Plugin Name: Rollerblade
 * Plugin URI: https://rollerbladeapp.com/support/
 * Description: Feedback tool
-* Version: 0.0.4
+* Version: 0.0.5
 * Author: Webatix
 * Author URI: http://webatix.com
 * Text Domain: rollerblade
@@ -73,22 +73,61 @@ class Rollerblade {
 		wp_enqueue_script( 'jquery-ui-dialog' );
 	
 		wp_enqueue_style( 'jqueryui', plugins_url( 'css/smoothness-jquery-ui.css', __FILE__ ) );
+		
+		$subdomain = get_option( '_rb_subdomain' );
+		
+		if ( empty( $subdomain ) ) {
+			
+			$subdomain_options = 'http://rollerbladeapp.com/login';
+			
+		} else {
+			
+			$subdomain_options = 'http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options';
+			
+		}
 	
 		?><div id="rb-user-instructions" style="display: none"><?php
 			
-				$subdomain = get_option( '_rb_subdomain' );
-			
-				if ( empty( $subdomain ) ) {
-			
-					_e( 'Thank you for installing Rollerblade! Please set up a free account on <a href="http://rollerbladeapp.com/signup/" target="_blank">Rollerbladeapp.com</a> so we have a place to store your screenshots and comments. If you\'ve already created an account, enter your account sub-domain in the <a href="' . admin_url( 'options-general.php?page=rollerblade' ) . '">settings</a> to link it to your account.', 'rollerblade' );
-					
-				} else {
+				//_e( 'Thank you for installing Rollerblade! Please set up a free account on <a href="http://rollerbladeapp.com/signup/" target="_blank">Rollerbladeapp.com</a> so we have a place to store your screenshots and comments. If you\'ve already created an account, enter your account sub-domain in the <a href="' . admin_url( 'options-general.php?page=rollerblade' ) . '">settings</a> to link it to your account.', 'rollerblade' );
+				_e( 'Setup is easiest if you do it now using our set up wizard. First step is to create an account on Rollerbladeapp.com<br /><a href="#" id="rb-already-have-acc">I already have an account</a><br /><a href="#" id="rb-dont-have-acc">I don’t have an account or am not sure</a>', 'rollerblade' );
 	
-					_e( 'Please login to <a href="http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options" target="_blank">http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options</a> and add ' . get_bloginfo( 'url' ) . ' to your settings so we can store your tickets. Once you\'ve done this, just go to the front end and click the Rollerblade button to use the tool!', 'rollerblade' );
-	
-				}
+				//_e( 'Please login to <a href="http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options" target="_blank">http://' . $subdomain . '.rollerbladeapp.com/wp-admin/options-general.php?page=rollerblade-options</a> and add ' . get_bloginfo( 'url' ) . ' to your settings so we can store your tickets. Once you\'ve done this, just go to the front end and click the Rollerblade button to use the tool!', 'rollerblade' );
 				
-		?></div><script type="text/javascript">jQuery( function($) { $( '#rb-user-instructions' ).dialog( { title: '<?php _e( 'Plugin activated!', 'rollerblade' ); ?>', width: 830 } ); } );</script><?php
+		?></div>
+		
+		<script type="text/javascript">
+
+			jQuery( function($) {
+
+				$( '#rb-user-instructions' ).dialog( {
+
+					title: '<?php _e( 'Thank you for activating Rollerblade!', 'rollerblade' ); ?>', width: 830
+
+				} );
+
+				$( '#rb-already-have-acc' ).click( function( event ) {
+
+					event.preventDefault();
+
+					$( '.ui-dialog-title' ).text( '<?php _e( 'Rollerblade Setup Wizard', 'rollerblade' ); ?>' );
+
+					$( '#rb-user-instructions' ).html( '<?php _e( 'Please continue to Rollerbladeapp.com, log in and add the site ' . get_bloginfo( 'url' ) . ' to your settings.<br /><a href="' . $subdomain_options . '" target="_blank">Ok, take me there now</a>', 'rollerblade' ); ?>' );
+					
+				} );
+
+				$( '#rb-dont-have-acc' ).click( function( event ) {
+
+					event.preventDefault();
+
+					$( '.ui-dialog-title' ).text( '<?php _e( 'Rollerblade Setup Wizard', 'rollerblade' ); ?>' );
+
+					$( '#rb-user-instructions' ).html( '<?php _e( 'Please continue to Rollerbladeapp.com, and create an account, then add the site ' . get_bloginfo( 'url' ) . ' to your settings.<br /><a href="http://rollerbladeapp.com/signup/" target="_blank">Ok, take me there now</a>', 'rollerblade' ); ?>' );
+					
+				} );
+
+			} );
+
+		</script><?php
 			
 	}
 	
@@ -366,7 +405,7 @@ class Rollerblade {
 						
 							<th scope="row">
 							
-								<label for="rb-subdomain"><?php _e( 'Rollerblade Subdomain', 'rollerblade' ); ?></label>
+								<label for="rb-subdomain"><?php _e( 'Rollerblade Sub-domain', 'rollerblade' ); ?></label>
 							
 							</th>
 							
