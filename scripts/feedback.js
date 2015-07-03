@@ -166,8 +166,8 @@
 						});
 						e.preventDefault();
 					}).on('mouseup', function(){
-						$(targ).removeClass('feedback-draggable');
-						$(targ).parents().off('mousemove mousedown');
+						$('#feedback-overview').removeClass('feedback-draggable');
+						$('#feedback-overview').parents().off('mousemove mousedown');
 					});
 				}
 
@@ -222,7 +222,7 @@
 					}
 				});
 
-				$( document ).on('mouseup', function(){		
+				$( document ).on('mouseup', function(){
 					if ( canDraw ) {
 						drag = false;
 
@@ -260,6 +260,10 @@
 						
 						$( '#feedback-overview' ).css({ left: dleft + 148.5 + dwidth/2 + 'px', top: dtop + dheight/2 - 92.5 + 'px' });
 						
+						$( 'body' ).append( '<div id="rb-loading-overlay"></div><div id="rb-loading">Saving Screenshot</div>' );
+						
+						$( '#rb-loading' ).css({ left: window.innerWidth/2 - 148 + 'px', top: window.innerHeight/2 - 54 + 'px' });
+						
 						//only one highlighted area per screenshot
 						canDraw = false;
 						
@@ -271,7 +275,7 @@
 					
 				});
 
-				$(document).on('mousemove', function(e) {
+				$( document ).on( 'mousemove', function( e ) {
 					if (canDraw && drag) {
 						//$('#feedback-highlighter').css('cursor', 'default');
 						
@@ -304,7 +308,7 @@
 							ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 						}
 					}
-				});
+				} );
 				
 				if (settings.highlightElement) {
 					var highlighted = [],
@@ -507,8 +511,13 @@
 						redraw(ctx, false);
 					}
 					html2canvas($('body'), {
-						onpreloaded: function() {
+						onpreloaded: function() {	//do not include our elements to the screenshot
+							
 							$('#feedback-overview').css({ display: 'none' });
+							
+							//remove "loading" spinner
+							$( '#rb-loading, #rb-loading-overlay' ).remove();
+							
 						},
 						onrendered: function(canvas) {
 							if (!settings.screenshotStroke) {
@@ -523,9 +532,12 @@
 							settings.onScreenshotTaken(post.img);
 							if(settings.showDescriptionModal) {
 								canDraw = false;
-								$('#feedback-canvas-tmp').remove();
-								$('#feedback-overview').css({ display: 'block' });
-								$('#feedback-overview-description-text>textarea').remove();
+								$( '#feedback-canvas-tmp' ).remove();
+								
+								//show comment box
+								$( '#feedback-overview' ).css({ display: 'block' });
+								
+								$( '#feedback-overview-description-text>textarea' ).remove();
 								//$('#feedback-overview-screenshot>img').remove();
 								$('<textarea id="feedback-overview-note">' + $('#feedback-note').val() + '</textarea>').insertAfter('#feedback-overview-description-text h3:eq(0)');
 								//$('#feedback-overview-screenshot').append('<img class="feedback-screenshot" src="' + img + '" />');							
@@ -559,16 +571,24 @@
 					$('#feedback-note').val(tx);
 				});
 				
-				$(document).on('click', '#feedback-submit', function() {
+				$( document ).on( 'click', '#feedback-submit', function() {
+					
 					canDraw = false;
 
 					if ($('#feedback-note').val().length > 0) {
+						
 						$('#feedback-submit-success,#feedback-submit-error').remove();
+						
 						$('#feedback-overview').css({ display: 'none' });
 						
 						post.img = img;
 						post.note = $('#feedback-note').val();
 						post.origin = window.location.href;
+						
+						//show "loading" spinner
+						$( 'body' ).append( '<div id="rb-loading-overlay"></div><div id="rb-loading">Submitting Your Report</div>' );
+						
+						$( '#rb-loading' ).css({ left: window.innerWidth/2 - 148 + 'px', top: window.innerHeight/2 - 54 + 'px' });
 						
 						$.ajax({
 							url: settings.ajaxURL,
@@ -580,6 +600,9 @@
 								request_data: post,
 							},
 							success: function( response ) {
+								
+								//remove "loading" spinner
+								$( '#rb-loading, #rb-loading-overlay' ).remove();
 								
 								if ( response && response.status == 'ok' ) {
 									
@@ -610,7 +633,10 @@
 							},
 							error: function(){
 								
-								$('#feedback-module').append(settings.tpl.submitError);
+								//remove "loading" spinner
+								$( '#rb-loading, #rb-loading-overlay' ).remove();
+								
+								$( '#feedback-module' ).append( settings.tpl.submitError );
 								
 								console.log( 'AJAX call failed!' );
 								
@@ -620,7 +646,7 @@
 					else {
 						$('#feedback-overview-error').show();
 					}
-				});
+				} );
 			});
 		}
 			

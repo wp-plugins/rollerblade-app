@@ -486,6 +486,8 @@ input[type="reset"]:active {
 	font-family: Arial, sans-serif;
 	border: none;
 	border-bottom:1px solid #cdcdcd;
+	color: #000;
+	background-color: #FFF;
 }
 
 #feedback-overview-screenshot {	
