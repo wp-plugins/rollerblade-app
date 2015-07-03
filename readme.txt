@@ -13,7 +13,7 @@ Rollerblade - a dead simple way for your clients to leave visual feedback on you
 Rollerblade is a tool that you can use to easily create issue reports and tickets for your team, right from an in-line interface on your Wordpress installation. 
 
 Here's the Demo: 
-[youtube http://www.youtube.com/watch?v=s6NST466XTg]
+http://www.youtube.com/watch?v=s6NST466XTg
 
 It's the perfect solution for developers, designers, teams, QA professionals and anyone that needs client feedback in a documented and easy to understand way. 
 
